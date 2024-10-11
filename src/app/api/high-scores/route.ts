@@ -10,7 +10,11 @@ export default async function handler(
       const { habit } = req.query; // Get the habit filter from query parameters
 
       const highScores = await prisma.journey.findMany({
-        where: habit ? { habitName: habit } : {}, // Apply filter if habit is specified
+        where: habit 
+          ? Array.isArray(habit) 
+            ? { habitName: { in: habit } } // Use 'in' filter for arrays
+            : { habitName: habit } // Single string case
+          : {}, // No filter if habit is not specified
         orderBy: { streak: "desc" },
         take: 10,
         include: {

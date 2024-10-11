@@ -1,25 +1,14 @@
 import React from "react";
+import { Journey } from "@/types/types";
 
-type JourneyCardProps = {
-  habitName: string;
-  streak: number;
-  lives: number;
-  treatDays: number;
-  onClick?: () => void; // Optional click handler for card actions
-};
-
-const JourneyCard: React.FC<JourneyCardProps> = ({
+const JourneyCard: React.FC<Journey> = ({
   habitName,
   streak,
   lives,
   treatDays,
-  onClick,
 }) => {
   return (
-    <div
-      className="max-w-sm cursor-pointer overflow-hidden rounded bg-white shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl"
-      onClick={onClick}
-    >
+    <div className="max-w-sm cursor-pointer overflow-hidden rounded bg-white shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl">
       <div className="px-6 py-4">
         <div className="mb-2 text-xl font-bold">{habitName}</div>
         <p className="text-base text-gray-700">

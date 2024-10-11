@@ -67,6 +67,7 @@ model Journey {
     users       User[]
     multiplayer Boolean  @default(false)
     createdAt   DateTime @default(now())
+    status      String   @default("active") // New field for status
 }
 
 model MultiplayerInvite {

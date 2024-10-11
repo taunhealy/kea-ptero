@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { getServerAuth } from "@/api-actions/getServerAuth";
+import { getServerAuth } from "@/app/api/auth/getServerAuth";
 
 const journeySchema = z.object({
   habitName: z.string().min(1, "Habit name is required"),

@@ -7,7 +7,7 @@ export async function updateJourneyStatus(journeyId: string, success: boolean) {
     throw new Error("Journey not found");
   }
 
-  let { streak, lives, treatDays } = journey;
+  let { streak, lives, treatDays, status } = journey;
 
   if (success) {
     streak += 1;
@@ -17,12 +17,12 @@ export async function updateJourneyStatus(journeyId: string, success: boolean) {
   } else {
     lives -= 1;
     if (lives <= 0) {
-      // Handle game over logic
+      status = "completed"; // Mark as completed if lives are exhausted
     }
   }
 
   await prisma.journey.update({
     where: { id: journeyId },
-    data: { streak, lives, treatDays },
+    data: { streak, lives, treatDays, status },
   });
 }

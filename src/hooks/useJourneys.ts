@@ -8,9 +8,11 @@ const fetchJourneys = async () => {
   return response.json();
 };
 
-export const useJourneys = () => {
+const useJourneys = () => {
   return useQuery({
     queryKey: ["journeys"],
     queryFn: fetchJourneys,
   });
 };
+
+export default useJourneys;
