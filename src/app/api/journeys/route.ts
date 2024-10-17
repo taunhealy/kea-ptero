@@ -14,9 +14,14 @@ export async function GET() {
     const journeys = await prisma.journey.findMany();
 
     const journeysWithCheckedInStatus = journeys.map((journey) => {
+      const lastCheckedIn = new Date(journey.lastCheckedIn);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);  // Set to beginning of day for comparison
+      const checkedIn = lastCheckedIn >= today;
+
       return {
         ...journey,
-        checkedIn: journey.checkedInToday,
+        checkedIn,
       };
     });
 
@@ -24,12 +29,8 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching journeys:", error);
     return NextResponse.json(
-      {
-        error: "Failed to fetch journeys",
-        details: (error as Error).message,
-        stack: (error as Error).stack,
-      },
-      { status: 500 },
+      { error: "Failed to fetch journeys" },
+      { status: 500 }
     );
   }
 }
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
       data: {
         habitName,
         users: { connect: { id: session.user.id } },
+        lastCheckedIn: new Date(0),  // Set this to a past date
       },
     });
 

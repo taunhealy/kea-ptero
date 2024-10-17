@@ -20,14 +20,16 @@ export const CheckInProvider: React.FC<{ children: React.ReactNode }> = ({ child
     console.log(`Attempting to check in for journey ID: ${journeyId}`);
     setPendingJourneyId(journeyId);
     try {
-      await updateJourney.mutateAsync({
+      const response = await updateJourney.mutateAsync({
         journeyId,
         success: true,
         lastCheckedIn: new Date(),
       });
       console.log(`Checked in successfully for journey ID: ${journeyId}`);
+      return response; // Return the updated journey
     } catch (error) {
       console.error("Error checking in:", error);
+      throw error;
     } finally {
       setPendingJourneyId(null);
     }

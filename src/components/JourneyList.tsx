@@ -7,10 +7,17 @@ interface JourneyListProps {
 }
 
 const JourneyList: React.FC<JourneyListProps> = ({ journeys }) => {
+  // Sort journeys by creation date (assuming there's a createdAt field)
+  const sortedJourneys = [...journeys].sort(
+    (a, b) =>
+      // @ts-ignore
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {journeys.length > 0 ? (
-        journeys.map((journey) => (
+      {sortedJourneys.length > 0 ? (
+        sortedJourneys.map((journey) => (
           <JourneyCard
             key={journey.id}
             id={journey.id}
@@ -20,7 +27,7 @@ const JourneyList: React.FC<JourneyListProps> = ({ journeys }) => {
             treatDays={journey.treatDays}
             status={journey.status}
             checkedIn={journey.checkedIn}
-            lastCheckedIn={journey.lastCheckedIn} // Add this line
+            lastCheckedIn={journey.lastCheckedIn}
           />
         ))
       ) : (

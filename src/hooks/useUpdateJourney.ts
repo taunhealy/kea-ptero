@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateJourneyStatus } from "@/services/JourneyOperations";
 
 export interface UpdateJourneyParams {
   journeyId: number;
@@ -12,7 +11,15 @@ export const useUpdateJourney = () => {
 
   const mutation = useMutation({
     mutationFn: async ({ journeyId, success }: UpdateJourneyParams) => {
-      await updateJourneyStatus(journeyId, success);
+      const response = await fetch(`/api/journeys/${journeyId}/update-status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ success }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update journey status');
+      }
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["journeys"] });

@@ -69,7 +69,6 @@ model Journey {
     createdAt     DateTime @default(now())
     status        String   @default("active")
     lastCheckedIn DateTime @default(now())
-    checkedInToday Boolean @default(false)
 }
 
 model MultiplayerInvite {

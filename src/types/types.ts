@@ -6,7 +6,6 @@ export interface Journey {
   treatDays: number;
   status: string;
   checkedIn: boolean;
-  onClick?: () => void;
   lastCheckedIn: Date;
 }
 

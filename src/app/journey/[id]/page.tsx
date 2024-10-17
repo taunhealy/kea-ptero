@@ -22,6 +22,8 @@ export default function JourneyPage() {
           lives={journey.lives}
           treatDays={journey.treatDays}
           status={journey.status}
+          checkedIn={journey.checkedIn}
+          lastCheckedIn={journey.lastCheckedIn}
         />
       )}
     </div>

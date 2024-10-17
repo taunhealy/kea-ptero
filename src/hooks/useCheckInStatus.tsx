@@ -1,40 +1,45 @@
-import { useState, useEffect } from "react";
-import { CHECK_IN_TIME } from "@/constants/checkIn";
-import { updateJourneyStatus } from "@/services/JourneyOperations";
+"use client";
 
-export const useCheckInStatus = (journeyId: number, streak: number) => {
+import { useState, useEffect } from "react";
+
+export const useCheckInStatus = (journeyId: number, lastCheckedIn: Date) => {
   const [checkInStatus, setCheckInStatus] = useState<"pending" | "success">(
     "pending",
   );
 
+  const updateJourneyStatus = async (journeyId: number, success: boolean) => {
+    const response = await fetch("/api/updateJourneyStatus", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ journeyId, success }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update journey status");
+    }
+    return response.json();
+  };
+
   useEffect(() => {
     const updateCheckInStatus = async () => {
-      const now = new Date();
-      const [hours = 0, minutes = 0] = CHECK_IN_TIME.split(":").map(Number); // Provide default values
-      const checkInDeadline = new Date(now);
-      checkInDeadline.setHours(hours, minutes, 0, 0);
-
       const today = new Date().setHours(0, 0, 0, 0);
-      const streakDate = new Date(
-        Date.now() - streak * 24 * 60 * 60 * 1000,
-      ).setHours(0, 0, 0, 0);
+      const lastCheckedInDay = new Date(lastCheckedIn).setHours(0, 0, 0, 0);
 
-      if (streakDate === today) {
+      if (lastCheckedInDay === today) {
         setCheckInStatus("success");
-      } else if (now > checkInDeadline) {
-        // Missed check-in, update journey status
-        await updateJourneyStatus(journeyId, null);
-        setCheckInStatus("pending"); // Reset to pending for next day
       } else {
-        setCheckInStatus("pending");
+        // User hasn't checked in today, they lose a life
+        try {
+          await updateJourneyStatus(journeyId, false);
+          setCheckInStatus("pending");
+        } catch (error) {
+          console.error("Failed to update journey status:", error);
+          // Handle error appropriately
+        }
       }
     };
 
     updateCheckInStatus();
-    const interval = setInterval(updateCheckInStatus, 60000); // Update every minute
+  }, [journeyId, lastCheckedIn]);
 
-    return () => clearInterval(interval);
-  }, [journeyId, streak]);
-
-  return checkInStatus;
+  return { checkInStatus };
 };
