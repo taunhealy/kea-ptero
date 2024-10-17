@@ -12,7 +12,7 @@ export default async function handler(
     case "GET":
       try {
         const journey = await prisma.journey.findUnique({
-          where: { id: String(id) },
+          where: { id: Number(id) },
         });
         if (!journey) {
           return res.status(404).json({ error: "Journey not found" });
@@ -26,7 +26,7 @@ export default async function handler(
       try {
         const { habitName, streak, lives, treatDays } = req.body;
         const updatedJourney = await prisma.journey.update({
-          where: { id: String(id) },
+          where: { id: Number(id) },
           data: { habitName, streak, lives, treatDays },
         });
         res.status(200).json(updatedJourney);
@@ -37,7 +37,7 @@ export default async function handler(
     case "DELETE":
       try {
         await prisma.journey.delete({
-          where: { id: String(id) },
+          where: { id: Number(id) },
         });
         res.status(204).end();
       } catch (error) {

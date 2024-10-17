@@ -5,7 +5,9 @@ export interface Journey {
   lives: number;
   treatDays: number;
   status: string;
+  checkedIn: boolean;
   onClick?: () => void;
+  lastCheckedIn: Date;
 }
 
 export interface UpdateJourneyParams {

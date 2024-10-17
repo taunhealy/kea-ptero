@@ -1,7 +1,8 @@
 import type { Config } from 'tailwindcss'
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config = {
-  darkMode: ['class'],
+  darkMode: 'class', // This ensures dark mode is only applied when the 'dark' class is present
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',

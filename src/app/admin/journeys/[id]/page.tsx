@@ -26,19 +26,13 @@ export default function JourneysPage() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  const categories = Array.from(
-    new Set(
-      journeys.flatMap((journey: any) =>
-        journey.categories.map(JSON.stringify),
-      ),
-    ),
-  ).map((category: unknown) => JSON.parse(category as string));
+  // Remove the categories logic as it's not applicable
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="mb-6 text-3xl font-bold">Journey Details</h1>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {journeys.map((journey: Journey) => (
+        {journeys?.map((journey: Journey) => (
           <JourneyCard
             key={journey.id}
             id={journey.id}
@@ -46,6 +40,9 @@ export default function JourneysPage() {
             streak={journey.streak}
             lives={journey.lives}
             treatDays={journey.treatDays}
+            status={journey.status}
+            checkedIn={journey.checkedIn}
+            lastCheckedIn={journey.lastCheckedIn}
           />
         ))}
       </div>

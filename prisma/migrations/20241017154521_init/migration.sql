@@ -2,19 +2,9 @@
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateTable
-CREATE TABLE "Post" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "createdById" TEXT NOT NULL,
-
-    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
+    "password" TEXT,
     "userId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -47,10 +37,38 @@ CREATE TABLE "User" (
     "name" TEXT,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
+    "password" TEXT,
     "image" TEXT,
+    "googleId" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Journey" (
+    "id" SERIAL NOT NULL,
+    "habitName" TEXT NOT NULL,
+    "streak" INTEGER NOT NULL DEFAULT 0,
+    "lives" INTEGER NOT NULL DEFAULT 3,
+    "treatDays" INTEGER NOT NULL DEFAULT 0,
+    "multiplayer" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "status" TEXT NOT NULL DEFAULT 'active',
+    "lastCheckedIn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Journey_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MultiplayerInvite" (
+    "id" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "receiverId" TEXT NOT NULL,
+    "journeyId" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+
+    CONSTRAINT "MultiplayerInvite_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -60,8 +78,11 @@ CREATE TABLE "VerificationToken" (
     "expires" TIMESTAMP(3) NOT NULL
 );
 
--- CreateIndex
-CREATE INDEX "Post_name_idx" ON "Post"("name");
+-- CreateTable
+CREATE TABLE "_JourneyToUser" (
+    "A" INTEGER NOT NULL,
+    "B" TEXT NOT NULL
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
@@ -73,16 +94,28 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_googleId_key" ON "User"("googleId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
--- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "_JourneyToUser_AB_unique" ON "_JourneyToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_JourneyToUser_B_index" ON "_JourneyToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_JourneyToUser" ADD CONSTRAINT "_JourneyToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Journey"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_JourneyToUser" ADD CONSTRAINT "_JourneyToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

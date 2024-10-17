@@ -21,6 +21,7 @@ export default function JourneyPage() {
           streak={journey.streak}
           lives={journey.lives}
           treatDays={journey.treatDays}
+          status={journey.status}
         />
       )}
     </div>

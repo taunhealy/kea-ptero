@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 
-export async function updateJourneyStatus(journeyId: string, success: boolean) {
+export async function updateJourneyStatus(
+  journeyId: number,
+  success: boolean | null,
+) {
   const journey = await prisma.journey.findUnique({ where: { id: journeyId } });
 
   if (!journey) {
@@ -9,15 +12,15 @@ export async function updateJourneyStatus(journeyId: string, success: boolean) {
 
   let { streak, lives, treatDays, status } = journey;
 
-  if (success) {
+  if (success === true) {
     streak += 1;
     if (streak % 14 === 0) {
       treatDays += 1;
     }
-  } else {
+  } else if (success === false || success === null) {
     lives -= 1;
     if (lives <= 0) {
-      status = "completed"; // Mark as completed if lives are exhausted
+      status = "completed"; // Use a string value instead of a number
     }
   }
 

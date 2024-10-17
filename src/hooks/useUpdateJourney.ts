@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateJourneyStatus } from "@/services/JourneyOperations";
 
 export interface UpdateJourneyParams {
-  journeyId: string;
+  journeyId: number;
   success: boolean;
+  lastCheckedIn: Date;
 }
 
 export const useUpdateJourney = () => {

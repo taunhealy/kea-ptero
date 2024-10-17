@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 
+interface HabitSelectorProps {
+  onHabitChange: (habit: string) => void;
+}
+
 const habitOptions = [
   { value: "social_media", label: "Social Media" },
+  { value: "coffee", label: "Coffee" },
+  { value: "alcohol", label: "Alcohol" },
+  { value: "smoking", label: "Smoking" },
   { value: "other", label: "Other" },
 ];
 
-export default function HabitSelector() {
-  const [selectedHabit, setSelectedHabit] = useState("");
-  const [customHabit, setCustomHabit] = useState("");
+const HabitSelector: React.FC<HabitSelectorProps> = ({ onHabitChange }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const habit = e.target.value;
+    onHabitChange(habit); // Directly call the prop function with the selected value
+  };
 
   return (
     <div>
-      <select
-        value={selectedHabit}
-        onChange={(e) => setSelectedHabit(e.target.value)}
-      >
+      <select onChange={handleChange} defaultValue="">
+        <option value="" disabled>Select a habit</option>
         {habitOptions.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-
-      {selectedHabit === "other" && (
-        <input
-          type="text"
-          placeholder="Define your habit"
-          value={customHabit}
-          onChange={(e) => setCustomHabit(e.target.value)}
-        />
-      )}
     </div>
   );
-}
+};
+
+// Add named export for HabitSelector
+export { HabitSelector };

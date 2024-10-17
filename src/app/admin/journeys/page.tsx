@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import JourneyCard from "@/components/JourneyCard";
+import JourneyList from "@/components/JourneyList";
 import { Journey } from "@/types/types";
 
 const fetchJourneys = async () => {
@@ -18,7 +18,7 @@ export default function AdminJourneysPage() {
     data: journeys,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Journey[]>({
     queryKey: ["journeys"],
     queryFn: fetchJourneys,
   });
@@ -26,29 +26,10 @@ export default function AdminJourneysPage() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  const categories = Array.from(
-    new Set(
-      journeys.flatMap((journey: any) =>
-        journey.categories.map(JSON.stringify),
-      ),
-    ),
-  ).map((category: unknown) => JSON.parse(category as string));
-
   return (
     <div className="container mx-auto py-8">
       <h1 className="mb-6 text-3xl font-bold">Journey Details</h1>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {journeys.map((journey: Journey) => (
-          <JourneyCard
-            key={journey.id}
-            id={journey.id}
-            habitName={journey.habitName}
-            streak={journey.streak}
-            lives={journey.lives}
-            treatDays={journey.treatDays}
-          />
-        ))}
-      </div>
+      <JourneyList journeys={journeys ?? []} />
     </div>
   );
 }

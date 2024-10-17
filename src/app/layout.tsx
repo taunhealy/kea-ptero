@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@/components/theme";
 import { ReactQueryProvider } from "@/react-query/provider";
-import { ReduxProvider } from "@/redux/provider";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/server/auth";
 import type { Metadata } from "next";
@@ -9,6 +8,7 @@ import { Toaster } from "sonner";
 import ClientProviders from "./client-providers";
 import "@/styles/globals.css"; // Import Tailwind CSS global styles
 import Navbar from "@/components/Navbar";
+import { CheckInProvider } from "@/contexts/CheckInContext";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -33,12 +33,12 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <ClientProviders session={session}>
-            <ReduxProvider>
-              <ReactQueryProvider>
+            <ReactQueryProvider>
+              <CheckInProvider>
                 <Navbar />
                 {children}
-              </ReactQueryProvider>
-            </ReduxProvider>
+              </CheckInProvider>
+            </ReactQueryProvider>
           </ClientProviders>
           <Toaster />
         </ThemeProvider>

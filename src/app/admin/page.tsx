@@ -18,15 +18,18 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto py-8">
         <div className="flex-col gap-2 p-4">
-          <h1 className="text-3xl font-bold text-black">Dashboard</h1>
-          <Link href="/admin/posts">
-            <div className="text-black">View Posts</div>
+          <h1 className="text-3xl font-bold text-black">Admin Dashboard</h1>
+          <Link href="/admin/journeys">
+            <div className="text-black">View All Journeys</div>
           </Link>
-          <Link href="/admin/posts/create-post">
-            <div className="text-black">Create Post</div>
+          <Link href="/admin/journeys/create-journey">
+            <div className="text-black">Create New Journey</div>
           </Link>
-          <Link href="/admin/categories">
-            <div className="text-black">View Categories</div>
+          <Link href="/admin/high-scores">
+            <div className="text-black">High Scores</div>
+          </Link>
+          <Link href="/admin/analytics">
+            <div className="text-black">Analytics</div>
           </Link>
         </div>
         {children}

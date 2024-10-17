@@ -59,15 +59,17 @@ model User {
 }
 
 model Journey {
-    id          String   @id @default(cuid())
-    habitName   String
-    streak      Int      @default(0)
-    lives       Int      @default(3)
-    treatDays   Int      @default(0)
-    users       User[]
-    multiplayer Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    status      String   @default("active") // New field for status
+    id            Int      @id @default(autoincrement())
+    habitName     String
+    streak        Int      @default(0)
+    lives         Int      @default(3)
+    treatDays     Int      @default(0)
+    users         User[]
+    multiplayer   Boolean  @default(false)
+    createdAt     DateTime @default(now())
+    status        String   @default("active")
+    lastCheckedIn DateTime @default(now())
+    checkedInToday Boolean @default(false)
 }
 
 model MultiplayerInvite {
